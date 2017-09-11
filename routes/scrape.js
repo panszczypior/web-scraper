@@ -3,6 +3,8 @@ var router = express.Router();
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 
+// BS: dlaczego część to consty, a część to vary?
+
 const genCharArray = (startChar, endChar) => {
   const result = [];
   let i = startChar.charCodeAt(0);
@@ -11,12 +13,16 @@ const genCharArray = (startChar, endChar) => {
   for (; i <= j ;i++) {
     result.push(String.fromCharCode(i));
   }
+  
+  // BS: jeżeli chcesz robić to w ten sposób, to skorzystaj z while loop zamiast fora
 
   return result;
 };
 
 const alphabet = genCharArray('a', 'z');
 
+// BS: część funkcji deklarujesz poprzeez przypisanie arrow funkcji do stałej (function expression)
+// BS: a część jako function declaration. Dlaczego nie napiszesz tego w ten sposób? const createPageFetcher = async (url) => {}
 async function createPageFetcher(url) {
   try {
     const response = await fetch(url);
@@ -26,10 +32,12 @@ async function createPageFetcher(url) {
       throw new Error('Something went wrong');
     }
   } catch (e) {
-    // console.log('errorix', e);
+    // console.log('errorix', e); //
   }
 };
 
+// BS: według mnie w ogóle nie potrzebna funkcja i nazwa jest niepoprawna bo sama funkcja nie fetchuje nic,
+// BS: tylko czeka na to, aż wszystkie promisy są fullfilled
 async function fetchAll(promises) {
   return await Promise.all(promises);
 };
