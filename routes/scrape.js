@@ -1,5 +1,5 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 
@@ -8,8 +8,9 @@ const genCharArray = (startChar, endChar) => {
   let i = startChar.charCodeAt(0);
   const j = endChar.charCodeAt(0);
 
-  for (; i <= j ;i++) {
+  while (i <= j) {
     result.push(String.fromCharCode(i));
+    i++;
   }
 
   return result;
@@ -17,7 +18,7 @@ const genCharArray = (startChar, endChar) => {
 
 const alphabet = genCharArray('a', 'z');
 
-async function createPageFetcher(url) {
+const createPageFetcher =  async (url) => {
   try {
     const response = await fetch(url);
     if (response.status === 200) {
@@ -26,12 +27,8 @@ async function createPageFetcher(url) {
       throw new Error('Something went wrong');
     }
   } catch (e) {
-    // console.log('errorix', e);
+    console.log('errorix', e);
   }
-};
-
-async function fetchAll(promises) {
-  return await Promise.all(promises);
 };
 
 router.get('/', function(req, res, next) {
@@ -42,14 +39,14 @@ router.get('/', function(req, res, next) {
 
       let index = 1;
 
-        for (index; index < 4; index++) {
+        for (index; index < 2; index++) {
           const url = `http://slownik-wyrazowobcych.eu/category/${letter}/page/${index}`;
           const response = createPageFetcher(url);
           promises.push(response);
         }
   });
 
-  const responses = fetchAll(promises);
+  const responses = Promise.all(promises);
   responses
     .then(values => {
       values.forEach(list => {
