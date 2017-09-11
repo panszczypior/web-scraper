@@ -1,10 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const fetch = require('node-fetch');
-const request = require('request');
 const cheerio = require('cheerio');
-const Logger = require('af-node-logger');
-const logger = Logger();
 
 const genCharArray = (startChar, endChar) => {
   const result = [];
@@ -16,20 +13,6 @@ const genCharArray = (startChar, endChar) => {
   }
 
   return result;
-};
-
-const coroutine = (gen) => {
-  const generator = gen();
-
-  const handle = (result) => {
-    if (result.done) {
-      return Promise.resolve(result.value);
-    }
-    return Promise.resolve(result.value)
-      .then(res => handle(generator.next(res)));
-	};
-
-  return handle(generator.next());
 };
 
 const alphabet = genCharArray('a', 'z');
